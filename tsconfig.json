@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/db/*": ["./src/server/__internals/db/*"],
-      "@/lib/*": ["./src/server/__internals/lib/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/components/*": ["./src/app/components/*"],
       "@/routers/*": ["./src/server/routers/*"]
     }
   },
