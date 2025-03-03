@@ -3,9 +3,10 @@ import { MaxWidthWrapper } from "./max_width_wrapper";
 import { SignOutButton } from "@clerk/nextjs";
 import { Button, buttonVariants } from "./ui/button";
 import { ArrowRight } from "lucide-react";
+import { auth } from "@clerk/nextjs/server";
 
-export const Navbar = () => {
-  const user = false;
+export const Navbar = async () => {
+  const user = await auth();
   return (
     <nav
       className="sticky z-[100px] h-16 inset-x-0 top-0 w-full border-b
@@ -46,7 +47,7 @@ export const Navbar = () => {
 
                 <div className="h-8 w-px bg-gray-200" />
                 <Button asChild size="sm" className="flex items-center gap-1.5">
-                  <Link href="/sign-in">
+                  <Link href="/sign-up">
                     Sign up <ArrowRight className="ml-2 size-4" />
                   </Link>
                 </Button>

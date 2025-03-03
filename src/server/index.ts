@@ -14,12 +14,7 @@ const appRouter = app.route("/post", authRouter);
 
 // The handler Next.js uses to answer API requests
 export const httpHandler = handle(app);
-/**
- * (Optional)
- * Exporting our API here for easy deployment
- *
- * Run `npm run deploy` for one-click API deployment to Cloudflare's edge network
- */
+
 export default app;
 
 // export type definition of API
