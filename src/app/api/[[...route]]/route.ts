@@ -1,2 +1,2 @@
 import { httpHandler } from "@/server";
-export { httpHandler as GET, httpHandler as POST };
+export { httpHandler as GET, httpHandler as POST, httpHandler as DELETE };

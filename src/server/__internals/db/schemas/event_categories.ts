@@ -6,12 +6,15 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { ulid } from "ulid";
 
 export const eventCategories = pgTable(
   "event_categories",
   {
-    id: varchar("id", { length: 50 }).primaryKey(),
+    id: varchar("id", { length: 50 })
+      .primaryKey()
+      .$defaultFn(() => ulid()),
     name: varchar("name", { length: 100 }).notNull(),
     colour: integer("colour").notNull(),
     emoji: varchar("emoji", { length: 50 }).notNull(),
@@ -42,3 +45,5 @@ export const eventCategoryRelation = relations(eventCategories, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export type EventCategory = InferSelectModel<typeof eventCategories>;

@@ -23,7 +23,7 @@
       "@/db/*": ["./src/server/__internals/db/*"],
       "@/lib/*": ["./src/lib/*"],
       "@/components/*": ["./src/app/components/*"],
-      "@/routers/*": ["./src/server/routers/*"]
+      "@/features/*": ["./src/features/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

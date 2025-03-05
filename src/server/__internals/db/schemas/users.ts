@@ -11,11 +11,15 @@ import {
 import { Plan } from "../../constants/enums";
 import { quotas } from "./quotas";
 import { eventCategories } from "./event_categories";
+import { events } from "./events";
+import { ulid } from "ulid";
 
 export const users = pgTable(
   "users",
   {
-    id: varchar("id", { length: 50 }).primaryKey(),
+    id: varchar("id", { length: 50 })
+      .primaryKey()
+      .$defaultFn(() => ulid()),
     external_id: varchar("external_id", { length: 50 }).notNull(),
     quota_limit: integer("quota_limit").notNull(),
     plan: varchar("plan", { length: 50 })
@@ -24,7 +28,7 @@ export const users = pgTable(
       .default(Plan.FREE),
 
     email: varchar("email", { length: 255 }).unique().notNull(),
-    apiKey: varchar("api_key", { length: 255 }).unique(),
+    api_key: varchar("api_key", { length: 255 }).unique(),
     discord_id: varchar("discord_id", { length: 50 }),
     created_at: timestamp("created_at", {
       mode: "date",
@@ -43,6 +47,7 @@ export const users = pgTable(
 export type User = InferSelectModel<typeof users>;
 
 export const usersRelations = relations(users, ({ many }) => ({
-  quota: many(quotas),
-  event_category: many(eventCategories),
+  quotas: many(quotas),
+  event_categories: many(eventCategories),
+  events: many(events),
 }));
