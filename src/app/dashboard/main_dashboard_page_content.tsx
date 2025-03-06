@@ -37,6 +37,8 @@ const MainDashboardPageContent = () => {
     );
   }
 
+  console.log({ deletingCategory });
+
   return (
     <>
       <ul className="grid max-w-6xl grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -145,9 +147,13 @@ const MainDashboardPageContent = () => {
             <Button
               variant="destructive"
               disabled={isDeleteEventCategoryPending}
-              onClick={() => deleteEventCategory(deletingCategory!)}
+              onClick={() =>
+                deleteEventCategory(deletingCategory!, {
+                  onSuccess: () => setDeletingCategory(null),
+                })
+              }
             >
-              Delete
+              {isDeleteEventCategoryPending ? "Deleting..." : "Delete"}
             </Button>
           </div>
         </div>

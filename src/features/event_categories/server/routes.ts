@@ -8,7 +8,7 @@ import {
   internalServerErrorResponse,
   successResponse,
 } from "@/utils/response";
-import createEventCategoriesSchema from "../schemas/create_event_categories";
+import createEventCategorySchema from "../schemas/create_event_categories";
 import { validateErrorHook } from "@/lib/zod_validator_response_formatter";
 import { requiredAuth } from "@/server/__internals/middleware/required_auth";
 import { AppEnv } from "@/server/__internals/types";
@@ -20,6 +20,7 @@ import {
 } from "./event_categories.service";
 import tryit from "@/lib/tryit";
 import { ErrorCode } from "@/server/__internals/constants/response_code";
+import { parseColour } from "@/lib/utils";
 
 const app = new Hono<AppEnv>()
   .use(requiredAuth)
@@ -55,7 +56,7 @@ const app = new Hono<AppEnv>()
     "/",
     zValidator(
       "json",
-      createEventCategoriesSchema,
+      createEventCategorySchema,
       validateErrorHook("invalid request body"),
     ),
     async (c) => {
@@ -64,8 +65,10 @@ const app = new Hono<AppEnv>()
 
       const [eventCategory, createEventCategoryErr] = await tryit(
         createEventCategory({
-          ...payload,
+          name: payload.name,
+          emoji: payload.emoji ?? "",
           user_id: user.id,
+          colour: parseColour(payload.colour),
         }),
       );
 
