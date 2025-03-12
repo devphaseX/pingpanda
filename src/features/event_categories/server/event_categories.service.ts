@@ -117,3 +117,24 @@ export const deleteEventCategory = async (
 
   return deletedCategory;
 };
+
+export const getEventCategoryCountByName = async (
+  categoryName: string,
+  user_id: string,
+): Promise<number | null> => {
+  const [eventCount] = await db
+    .select({ count: count(eventCategories.id) })
+    .from(events)
+    .innerJoin(
+      eventCategories,
+      eq(events.event_category_id, eventCategories.id),
+    )
+    .where(
+      and(
+        eq(eventCategories.user_id, user_id),
+        eq(eventCategories.name, categoryName),
+      ),
+    );
+
+  return eventCount?.count ?? null;
+};

@@ -19,11 +19,14 @@ import {
   deleteEventCategory,
   getCategoriesWithEventCounts,
   getEventCategories,
+  getEventCategoryCountByName,
 } from "./event_categories.service";
 import tryit from "@/lib/tryit";
 import { ErrorCode } from "@/server/__internals/constants/response_code";
 import { parseColour } from "@/lib/utils";
 import createEventCategorySchema from "../schemas/create_event_categories";
+import { pollHasEventCategoriesSchema } from "../schemas/poll_has_event_categories";
+import { eventCategories } from "@/server/__internals/db/schemas";
 
 const app = new Hono<AppEnv>()
   .use(requiredAuth)
@@ -162,6 +165,38 @@ const app = new Hono<AppEnv>()
       data: { eventCategories },
       message: "quick event categories setup",
     });
-  });
+  })
+  .get(
+    "/poll",
+    zValidator(
+      "query",
+      pollHasEventCategoriesSchema,
+      validateErrorHook("invalid request query"),
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const { category_name } = c.req.valid("query");
+
+      const eventCategoryCount = await getEventCategoryCountByName(
+        category_name,
+        user.id,
+      );
+
+      if (eventCategoryCount === null) {
+        return errorResponse(
+          c,
+          `Category "${category_name}" not found`,
+          StatusCodes.NOT_FOUND,
+          {
+            error_code: ErrorCode.NOT_FOUND,
+          },
+        );
+      }
+
+      const hasEvents = eventCategoryCount > 0;
+
+      return successResponse(c, { data: { hasEvents } });
+    },
+  );
 
 export default app;
