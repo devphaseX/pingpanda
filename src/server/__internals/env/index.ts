@@ -5,6 +5,8 @@ dotenv.config();
 export const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production"]).default("development"),
   DATABASE_URL: z.string(),
+  APP_URL: z.string().url(),
+  NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
 export const formatErrors = (

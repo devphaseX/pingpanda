@@ -29,7 +29,7 @@ export const useCategoryHasEvents = (
     },
 
     refetchInterval: (query) => {
-      return query?.state?.data?.hasEvents ? false : 1000;
+      return query?.state?.data?.hasEvents ? false : 5000;
     },
 
     initialData: { hasEvents: initialHasEventCheck ?? false },
