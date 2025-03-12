@@ -10,7 +10,7 @@ export const Navbar = async () => {
   return (
     <nav
       className="sticky z-[100px] h-16 inset-x-0 top-0 w-full border-b
-      border-gray-200 bg-white/80 backdrop-blur-lg transition-all   "
+      border-gray-200 bg-white/80 backdrop-blur-lg transition-all"
     >
       <MaxWidthWrapper>
         <div className="flex h-16 items-center justify-between">
@@ -18,7 +18,7 @@ export const Navbar = async () => {
             Ping<span className="text-brand-700">Panda</span>
           </Link>
           <div className="h-full flex items-center space-x-4">
-            {user ? (
+            {user?.userId ? (
               <>
                 <SignOutButton>
                   <Button size="sm" variant="ghost">

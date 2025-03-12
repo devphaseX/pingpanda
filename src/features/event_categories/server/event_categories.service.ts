@@ -17,7 +17,7 @@ import {
   sql,
 } from "drizzle-orm";
 
-type CreateEventCategoryData = Pick<
+export type CreateEventCategoryData = Pick<
   EventCategory,
   "name" | "colour" | "user_id" | "emoji"
 >;
@@ -29,6 +29,13 @@ export const createEventCategory = async (data: CreateEventCategoryData) => {
     .returning();
 
   return eventCategory;
+};
+
+export const bulkCreateEventCategory = async (
+  data: CreateEventCategoryData[],
+) => {
+  const categories = await db.insert(eventCategories).values(data).returning();
+  return categories;
 };
 
 export const getEventCategories = (userID: string) => {

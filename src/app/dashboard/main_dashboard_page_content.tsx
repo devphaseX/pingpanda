@@ -9,6 +9,7 @@ import { Button, buttonVariants } from "../components/ui/button";
 import { Modal } from "../components/ui/modal";
 import { useState } from "react";
 import { useDeleteEventCategory } from "@/features/event_categories/api/mutations/use_delete_event_category";
+import { DashboardEmptyState } from "./dashboard_empty_state";
 
 const MainDashboardPageContent = () => {
   const { data: categories, isPending: isEventCategoriesPending } =
@@ -30,14 +31,8 @@ const MainDashboardPageContent = () => {
   }
 
   if (!categories || categories.length === 0) {
-    return (
-      <div className="flex items-center justify-center flex-1 h-full w-full">
-        <p>No categories found.</p>
-      </div>
-    );
+    return <DashboardEmptyState />;
   }
-
-  console.log({ deletingCategory });
 
   return (
     <>

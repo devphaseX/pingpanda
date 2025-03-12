@@ -39,7 +39,14 @@ const EMOJI_OPTIONS = [
   { emoji: "🔔", label: "Notification" },
 ];
 
-export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
+interface CreateEventCategoryModel extends PropsWithChildren {
+  containerClassName?: string;
+}
+
+export const CreateEventCategoryModal = ({
+  children,
+  containerClassName,
+}: CreateEventCategoryModel) => {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: createEventCategory, isPending: isCreatingEventCategory } =
     useCreateEventCategory();
@@ -68,7 +75,9 @@ export const CreateEventCategoryModal = ({ children }: PropsWithChildren) => {
 
   return (
     <>
-      <div onClick={() => setIsOpen(true)}>{children}</div>
+      <div onClick={() => setIsOpen(true)} className={containerClassName}>
+        {children}
+      </div>
 
       <Modal
         showModal={isOpen}

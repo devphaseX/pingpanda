@@ -8,12 +8,14 @@ import {
   internalServerErrorResponse,
   successResponse,
 } from "@/utils/response";
-import createEventCategorySchema from "../schemas/create_event_categories";
+
 import { validateErrorHook } from "@/lib/zod_validator_response_formatter";
 import { requiredAuth } from "@/server/__internals/middleware/required_auth";
 import { AppEnv } from "@/server/__internals/types";
 import {
+  bulkCreateEventCategory,
   createEventCategory,
+  CreateEventCategoryData,
   deleteEventCategory,
   getCategoriesWithEventCounts,
   getEventCategories,
@@ -21,6 +23,7 @@ import {
 import tryit from "@/lib/tryit";
 import { ErrorCode } from "@/server/__internals/constants/response_code";
 import { parseColour } from "@/lib/utils";
+import createEventCategorySchema from "../schemas/create_event_categories";
 
 const app = new Hono<AppEnv>()
   .use(requiredAuth)
@@ -132,6 +135,33 @@ const app = new Hono<AppEnv>()
       { data: { id: deletedCategory.id } },
       StatusCodes.OK,
     );
+  })
+  .post("/quick-start", async (c) => {
+    const { id } = c.get("user");
+    let quickStartEventCategories: Array<CreateEventCategoryData> = [
+      {
+        name: "Bug",
+        emoji: "🚀️",
+        colour: 0xff6b6b,
+        user_id: "",
+      },
+      { name: "Sale", emoji: "💰️", colour: 0xffeb3b, user_id: "" },
+      { name: "Question", emoji: "🤔️", colour: 0x6c5ce7, user_id: "" },
+    ];
+
+    quickStartEventCategories = quickStartEventCategories.map((category) => ({
+      ...category,
+      user_id: id,
+    }));
+
+    const eventCategories = await bulkCreateEventCategory(
+      quickStartEventCategories,
+    );
+
+    return successResponse(c, {
+      data: { eventCategories },
+      message: "quick event categories setup",
+    });
   });
 
 export default app;
