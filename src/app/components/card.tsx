@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/utils";
 import { HTMLAttributes } from "react";
 

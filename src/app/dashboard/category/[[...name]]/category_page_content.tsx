@@ -2,7 +2,7 @@
 
 import { parseAsInteger, parseAsStringEnum, useQueryStates } from "nuqs";
 import { useCategoryHasEvents } from "@/features/event_categories/api/queries/use_category_has_events";
-import { EventCategory } from "@/server/__internals/db/schemas";
+import { Event, EventCategory } from "@/server/__internals/db/schemas";
 import { useQuery } from "@tanstack/react-query";
 import { EmptyCategoryState } from "./empty_category_state";
 import { useGetEventsByCategoryName } from "@/features/events/v1/api/queries/use_get_events_by_category_name";
@@ -15,8 +15,30 @@ import {
 } from "@/app/components/ui/tabs";
 import { Card } from "@/app/components/card";
 import { BarChart } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { isAfter, isToday, startOfMonth, startOfWeek } from "date-fns";
+import { EventWithCategory, getColumnDefs } from "./column_def";
+import {
+  ColumnFiltersState,
+  ColumnFiltersTableState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  PaginationState,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
+import { Heading } from "@/app/components/heading";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/app/components/ui/table";
 
 interface CategoryPageContentProps {
   hasEvents: boolean;
@@ -105,6 +127,43 @@ export const CategoryPageContent = ({
     return sums;
   }, [events?.events]);
 
+  const columns = useMemo(
+    () =>
+      getColumnDefs(
+        events?.events[0] as unknown as Event & { category: string },
+      ),
+    [category.name, events?.events[0]],
+  );
+
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: page,
+    pageSize: perPage,
+  });
+
+  const table = useReactTable({
+    columns,
+    data: (events?.events as EventWithCategory[]) || [],
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
+    manualPagination: true,
+
+    pageCount: events?.metdata.totalPages ?? 0,
+    onPaginationChange: setPagination,
+
+    state: {
+      sorting,
+      columnFilters,
+      pagination,
+    },
+  });
+
   return (
     <div className="space-y-6">
       <Tabs
@@ -151,6 +210,71 @@ export const CategoryPageContent = ({
           </div>
         </TabsContent>
       </Tabs>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <div className="w-full flex flex-col gap-4">
+            <Heading className="text-3xl">Event Overview</Heading>
+          </div>
+        </div>
+
+        <Card contentClassName="px-6 py-4">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              ))}
+            </TableHeader>
+
+            <TableBody>
+              {isFetching ? (
+                [...Array(5)].map((_, i) => (
+                  <TableRow key={i}>
+                    {columns.map((_, cellIndex) => (
+                      <TableCell key={cellIndex}>
+                        <div className="h-4 w-full bg-gray-200 animate-pulse rounded"></div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : table.getRowModel().rows.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No data available
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
+      </div>
     </div>
   );
 };

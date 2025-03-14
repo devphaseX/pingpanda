@@ -4,15 +4,10 @@ import {
   events,
 } from "@/server/__internals/db/schemas";
 import { db } from "@/server/__internals/db/setup";
-import {
-  PaginateQuery,
-  withPagination,
-} from "@/server/__internals/lib/paginate";
-import { and, eq, getTableColumns, ilike, sql, SQL } from "drizzle-orm";
-import { Context } from "hono";
+import { withPagination } from "@/server/__internals/lib/paginate";
+import { and, desc, eq, getTableColumns, ilike, sql, SQL } from "drizzle-orm";
 import { GetEventsByCategoryNameQuery } from "../schemas/get_events_by_category_name_schema";
 import { TimeRange } from "@/server/__internals/constants/enums";
-import { PgDialect } from "drizzle-orm/pg-core";
 
 export type CreateEventPayload = Pick<
   Event,
@@ -72,13 +67,14 @@ export const getEventByCategoryName = async (
 
   return withPagination(
     db
-      .select(getTableColumns(events))
+      .select({ ...getTableColumns(events), category: eventCategories.name })
       .from(events)
       .innerJoin(
         eventCategories,
         eq(eventCategories.id, events.event_category_id),
       )
       .where(sql.join(conds, sql` and `))
+      .orderBy(desc(events.created_at))
       .$dynamic(),
 
     { page: query.page, perPage: query.perPage },
