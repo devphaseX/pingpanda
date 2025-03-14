@@ -1,0 +1,1 @@
+ALTER TABLE "quotas" ADD CONSTRAINT "per_month_quota_unique" UNIQUE("user_id","month","year");

@@ -2,6 +2,7 @@ import { PgSelect, PgSelectQueryBuilder } from "drizzle-orm/pg-core";
 import { Context } from "hono";
 import { sql } from "drizzle-orm";
 import { db } from "../db/setup";
+import { z } from "zod";
 
 export type PaginateResult<T> = {
   data: Array<T>;
@@ -19,16 +20,24 @@ export type PaginateResult<T> = {
   };
 };
 
-export async function withPagination<T extends PgSelect>(
-  c: Context,
+export const paginateQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).optional(),
+  perPage: z.coerce.number().int().min(1).optional(),
+});
+
+export type PaginateQuery = z.infer<typeof paginateQuerySchema>;
+
+export async function withPagination<
+  T extends PgSelect,
+  Result = T["_"]["result"][number],
+>(
   qb: T,
-): Promise<PaginateResult<T>> {
-  const url = c.req.url;
-  const query = new URLSearchParams(url);
-  let page = Number(query.get("page"));
-  let perPage = Number(query.get("perPage"));
-  query.delete("page");
-  query.delete("perPage");
+  paginateQuery: PaginateQuery,
+  url: string,
+): Promise<PaginateResult<Result>> {
+  let page = Number(paginateQuery.page || 1);
+  let perPage = Number(paginateQuery.perPage ?? 10);
+
   page = page || 1;
   perPage = perPage || 10;
 
@@ -44,7 +53,9 @@ export async function withPagination<T extends PgSelect>(
   const totalPages = Math.ceil(totalRecords / perPage);
   const prevPage = page === 1 ? null : page - 1;
   const nextPage = page < totalPages ? page + 1 : null;
-  const path = c.req.path;
+  const urlObj = new URL(url);
+  const path = urlObj.pathname;
+  const query = urlObj.searchParams;
 
   const nextUrl =
     nextPage === null
@@ -71,7 +82,7 @@ export async function withPagination<T extends PgSelect>(
         );
 
   return {
-    data: data as Array<T>,
+    data: data as Array<Result>,
     meta: {
       page,
       perPage,

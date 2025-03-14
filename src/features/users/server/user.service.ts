@@ -17,7 +17,10 @@ export const getUserByApiKey = async (apiKey: string) => {
   return user;
 };
 
-type CreateUserData = Pick<User, "quota_limit" | "external_id" | "email">;
+type CreateUserData = Pick<
+  User,
+  "quota_limit" | "external_id" | "email" | "api_key"
+>;
 export const createUser = async (data: CreateUserData) => {
   const [user] = await db.insert(users).values(data).returning();
 

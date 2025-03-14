@@ -8,6 +8,20 @@
       "when": 1741057679413,
       "tag": "0000_stale_prism",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741857642010,
+      "tag": "0001_normal_genesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741857953020,
+      "tag": "0002_previous_cyclops",
+      "breakpoints": true
     }
   ]
 }

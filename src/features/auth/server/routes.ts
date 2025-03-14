@@ -2,6 +2,7 @@ import {
   createUser,
   getUserByExternalId,
 } from "@/features/users/server/user.service";
+import { generateApiKey } from "@/server/__internals/lib/api_key";
 import { getAuth } from "@hono/clerk-auth";
 import { Hono } from "hono";
 
@@ -22,6 +23,7 @@ const app = new Hono().post("/sync", async (c) => {
       external_id: auth.userId,
       email: userData.emailAddresses[0].emailAddress,
       quota_limit: 100,
+      api_key: generateApiKey(),
     });
   }
 

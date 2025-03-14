@@ -7,6 +7,8 @@ export const envSchema = z.object({
   DATABASE_URL: z.string(),
   APP_URL: z.string().url(),
   NEXT_PUBLIC_APP_URL: z.string().url(),
+  DISCORD_TOKEN: z.string().min(1).max(2000),
+  DISCORD_APP_ID: z.string().min(1).max(100),
 });
 
 export const formatErrors = (

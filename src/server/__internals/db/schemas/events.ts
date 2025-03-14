@@ -11,7 +11,7 @@ import { users } from "./users";
 import { DeliverStatus } from "../../constants/enums";
 import { eventCategories } from "./event_categories";
 import { Index } from "drizzle-orm/sqlite-core";
-import { relations } from "drizzle-orm";
+import { InferSelectModel, relations } from "drizzle-orm";
 
 export const events = pgTable(
   "events",
@@ -20,6 +20,7 @@ export const events = pgTable(
       .primaryKey()
       .$defaultFn(() => ulid()),
 
+    name: varchar("name", { length: 255 }).notNull(),
     fields: jsonb("fields").notNull(),
     formatted_message: text("formatted_message").notNull(),
 
@@ -54,6 +55,8 @@ export const events = pgTable(
   },
   (t) => [index("created_index").on(t.created_at)],
 );
+
+export type Event = InferSelectModel<typeof events>;
 
 export const eventRelations = relations(events, ({ one }) => ({
   user: one(users, {

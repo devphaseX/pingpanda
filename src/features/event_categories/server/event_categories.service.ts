@@ -10,6 +10,7 @@ import {
   count,
   eq,
   gte,
+  ilike,
   inArray,
   isNotNull,
   lte,
@@ -132,7 +133,7 @@ export const getEventCategoryCountByName = async (
     .where(
       and(
         eq(eventCategories.user_id, user_id),
-        eq(eventCategories.name, categoryName),
+        ilike(eventCategories.name, categoryName),
       ),
     );
 

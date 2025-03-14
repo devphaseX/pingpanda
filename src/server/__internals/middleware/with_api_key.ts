@@ -13,7 +13,7 @@ export const withApiKeyMiddleware = createMiddleware<AppEnv>(
     const authHeader = c.req.header("Authorization");
 
     if (authHeader) {
-      const [apiKeyHeader, apiKey] = authHeader.split(" ")[1];
+      const [apiKeyHeader, apiKey] = authHeader.split(" ");
 
       if (apiKeyHeader !== "Bearer") {
         c.status(StatusCodes.UNAUTHORIZED);

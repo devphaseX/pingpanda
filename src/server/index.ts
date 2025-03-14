@@ -6,21 +6,24 @@ import StatusCodes from "http-status";
 
 import authRouter from "@/features/auth/server/routes";
 import eventCategoriesRouter from "@/features/event_categories/server/routes";
+import eventsRouter from "@/features/events/v1/server/routes";
 import { withApiKeyMiddleware } from "./__internals/middleware/with_api_key";
 import { errorResponse } from "@/utils/response";
 
-const app = new Hono()
-  .basePath("/api")
-  .use(cors())
-  .use(clerkMiddleware())
-  .use(withApiKeyMiddleware);
-
+const app = new Hono().basePath("/api").use(cors()).use(clerkMiddleware());
 /**
  * This is the primary router for your server.
  *
  * All routers added in /server/routers should be manually added here.
  */
+
+const v1 = new Hono()
+  .basePath("/v1")
+  .use(withApiKeyMiddleware)
+  .route("/events", eventsRouter);
+
 const appRouter = app
+  .route("/", v1)
   .route("/auth", authRouter)
   .route("/event-categories", eventCategoriesRouter);
 
