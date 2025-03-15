@@ -10,7 +10,7 @@ import { getMonth } from "date-fns";
 import {
   getCurrentQuota,
   upsertQuota,
-} from "@/features/users/server/quota.service";
+} from "@/features/quotas/server/quota.service";
 import { DeliverStatus, PlanQuota } from "@/server/__internals/constants/enums";
 import { DiscordClient } from "@/lib/discord_client";
 import { getEnv } from "@/server/__internals/env";

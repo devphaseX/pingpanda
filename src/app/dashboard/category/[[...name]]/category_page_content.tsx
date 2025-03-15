@@ -20,7 +20,6 @@ import { isAfter, isToday, startOfMonth, startOfWeek } from "date-fns";
 import { EventWithCategory, getColumnDefs } from "./column_def";
 import {
   ColumnFiltersState,
-  ColumnFiltersTableState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -39,6 +38,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
+import { Button } from "@/app/components/ui/button";
 
 interface CategoryPageContentProps {
   hasEvents: boolean;
@@ -68,12 +68,14 @@ export const CategoryPageContent = ({
     ),
   });
 
-  const { data, error, fetchNextPage, hasNextPage, isFetching, refetch } =
-    useGetEventsByCategoryName(category.name, {
+  const { data, isFetching, refetch } = useGetEventsByCategoryName(
+    category.name,
+    {
       page,
       perPage,
       period,
-    });
+    },
+  );
 
   const events = data?.pages[(page ?? 1) - 1];
 
@@ -274,6 +276,24 @@ export const CategoryPageContent = ({
             </TableBody>
           </Table>
         </Card>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage() || isFetching}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage() || isFetching}
+        >
+          Next
+        </Button>
       </div>
     </div>
   );

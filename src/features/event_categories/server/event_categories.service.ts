@@ -139,3 +139,14 @@ export const getEventCategoryCountByName = async (
 
   return eventCount?.count ?? null;
 };
+
+export const getEventCategoryCounts = async (userID: string) => {
+  const [{ counts: eventCounts }] = await db
+    .select({
+      counts: count(eventCategories.id),
+    })
+    .from(eventCategories)
+    .where(eq(eventCategories.user_id, userID));
+
+  return eventCounts;
+};

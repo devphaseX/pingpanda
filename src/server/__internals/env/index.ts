@@ -9,6 +9,9 @@ export const envSchema = z.object({
   NEXT_PUBLIC_APP_URL: z.string().url(),
   DISCORD_TOKEN: z.string().min(1).max(2000),
   DISCORD_APP_ID: z.string().min(1).max(100),
+  STRIPE_SECRET_KEY: z.string().min(1).max(2000),
+  STRIPE_SUCCESS_URL: z.string().url(),
+  STRIPE_CANCEL_URL: z.string().url(),
 });
 
 export const formatErrors = (

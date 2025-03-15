@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "./components/providers";
 import { EB_Garamond } from "next/font/google";
 import { cn } from "@/utils";
@@ -33,6 +34,7 @@ export default function RootLayout({
             <NuqsAdapter>
               <Providers>{children}</Providers>
             </NuqsAdapter>
+            <Toaster />
           </main>
         </body>
       </html>

@@ -7,6 +7,8 @@ import StatusCodes from "http-status";
 import authRouter from "@/features/auth/server/routes";
 import eventCategoriesRouter from "@/features/event_categories/server/routes";
 import eventsRouter from "@/features/events/v1/server/routes";
+import paymentsRouter from "@/features/payments/server/routes";
+import quotasRouter from "@/features/quotas/server/routes";
 import { withApiKeyMiddleware } from "./__internals/middleware/with_api_key";
 import { errorResponse } from "@/utils/response";
 
@@ -25,7 +27,9 @@ const v1 = new Hono()
 const appRouter = app
   .route("/", v1)
   .route("/auth", authRouter)
-  .route("/event-categories", eventCategoriesRouter);
+  .route("/event-categories", eventCategoriesRouter)
+  .route("/payments", paymentsRouter)
+  .route("/quotas", quotasRouter);
 
 app.onError((error, c) => {
   c.status(StatusCodes.INTERNAL_SERVER_ERROR);

@@ -1,6 +1,7 @@
 import { client } from "@/lib/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateEventCategoryInput } from "../../schemas/create_event_categories";
+import { toast } from "sonner";
 
 export const useCreateEventCategory = () => {
   const queryClient = useQueryClient();
@@ -21,6 +22,10 @@ export const useCreateEventCategory = () => {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["event_categories"] });
+    },
+
+    onError: async (err) => {
+      toast.error(err.message);
     },
   });
 };
