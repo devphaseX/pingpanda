@@ -39,7 +39,7 @@ export const Navbar = async () => {
                   className="flex items-center gap-1"
                   variant="ghost"
                 >
-                  <Link href="/prices">Pricing</Link>
+                  <Link href="/pricing">Pricing</Link>
                 </Button>
                 <Button asChild size="sm" variant="ghost">
                   <Link href="/sign-in">Sign in</Link>

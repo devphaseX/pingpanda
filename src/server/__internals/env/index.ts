@@ -12,6 +12,7 @@ export const envSchema = z.object({
   STRIPE_SECRET_KEY: z.string().min(1).max(2000),
   STRIPE_SUCCESS_URL: z.string().url(),
   STRIPE_CANCEL_URL: z.string().url(),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1).max(2000),
 });
 
 export const formatErrors = (

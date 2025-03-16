@@ -17,6 +17,19 @@ export const getUserByApiKey = async (apiKey: string) => {
   return user;
 };
 
+export const updateUser = async (
+  id: string,
+  data: Partial<Omit<User, "id">>,
+) => {
+  const [user] = await db
+    .update(users)
+    .set(data)
+    .where(eq(users.id, id))
+    .returning();
+
+  return user;
+};
+
 type CreateUserData = Pick<
   User,
   "quota_limit" | "external_id" | "email" | "api_key"

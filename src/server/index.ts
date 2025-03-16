@@ -8,6 +8,8 @@ import authRouter from "@/features/auth/server/routes";
 import eventCategoriesRouter from "@/features/event_categories/server/routes";
 import eventsRouter from "@/features/events/v1/server/routes";
 import paymentsRouter from "@/features/payments/server/routes";
+import userRouter from "@/features/users/server/routes";
+import webhooksRouter from "@/features/webhooks/server/routes";
 import quotasRouter from "@/features/quotas/server/routes";
 import { withApiKeyMiddleware } from "./__internals/middleware/with_api_key";
 import { errorResponse } from "@/utils/response";
@@ -27,6 +29,8 @@ const v1 = new Hono()
 const appRouter = app
   .route("/", v1)
   .route("/auth", authRouter)
+  .route("/users", userRouter)
+  .route("/webhooks", webhooksRouter)
   .route("/event-categories", eventCategoriesRouter)
   .route("/payments", paymentsRouter)
   .route("/quotas", quotasRouter);

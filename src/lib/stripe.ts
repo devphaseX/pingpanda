@@ -24,7 +24,7 @@ export const createCheckoutSession = async (params: {
     cancel_url: params.cancelUrl,
     customer_email: params.userEmail,
     metadata: {
-      userId: params.userId,
+      user_id: params.userId,
     },
   });
 
