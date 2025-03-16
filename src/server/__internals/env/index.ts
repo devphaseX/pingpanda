@@ -10,8 +10,8 @@ export const envSchema = z.object({
   DISCORD_TOKEN: z.string().min(1).max(2000),
   DISCORD_APP_ID: z.string().min(1).max(100),
   STRIPE_SECRET_KEY: z.string().min(1).max(2000),
-  STRIPE_SUCCESS_URL: z.string().url(),
-  STRIPE_CANCEL_URL: z.string().url(),
+  STRIPE_SUCCESS_URL: z.string().min(1),
+  STRIPE_CANCEL_URL: z.string().min(1),
   STRIPE_WEBHOOK_SECRET: z.string().min(1).max(2000),
 });
 

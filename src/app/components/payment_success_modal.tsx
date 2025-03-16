@@ -27,7 +27,7 @@ export const PaymentSuccessModal = () => {
       showModal={isOpen}
       setShowModal={setIsOpen}
       onClose={handleClose}
-      className="px-6 pt-6"
+      className="px-6 pt-6 h-full"
       preventDefaultClose={!isPaymentCompleted}
     >
       <div className="flex flex-col items-center">

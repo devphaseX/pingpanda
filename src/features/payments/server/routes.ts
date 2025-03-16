@@ -16,11 +16,13 @@ const app = new Hono<AppEnv>()
       return errorResponse(c, "Already subscribed", StatusCodes.FORBIDDEN);
     }
 
+    const successUrl = `${getEnv("NEXT_PUBLIC_APP_URL")}/dashboard?success=true`;
+    const cancelUrl = `${getEnv("NEXT_PUBLIC_APP_URL")}/pricing`;
     const session = await createCheckoutSession({
       userId: user.id,
       userEmail: user.email,
-      successUrl: getEnv("STRIPE_SUCCESS_URL"),
-      cancelUrl: getEnv("STRIPE_CANCEL_URL"),
+      successUrl,
+      cancelUrl,
     });
 
     return successResponse(c, { url: session.url }, StatusCodes.CREATED);

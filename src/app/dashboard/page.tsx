@@ -29,10 +29,12 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   }
 
   if (intent === "upgrade") {
+    const successUrl = `${getEnv("NEXT_PUBLIC_APP_URL")}/dashboard?success=true`;
+    const cancelUrl = `${getEnv("NEXT_PUBLIC_APP_URL")}/pricing`;
     const session = await createCheckoutSession({
       userId: user.id,
-      successUrl: getEnv("STRIPE_SUCCESS_URL"),
-      cancelUrl: getEnv("STRIPE_CANCEL_URL"),
+      successUrl,
+      cancelUrl,
       userEmail: user.email,
     });
 
@@ -40,8 +42,6 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       return redirect(session.url);
     }
   }
-
-  console.log({ success });
 
   return (
     <>
